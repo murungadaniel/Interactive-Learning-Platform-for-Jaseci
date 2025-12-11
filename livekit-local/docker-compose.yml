@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  livekit:
+    image: livekit/livekit-server:latest
+    container_name: livekit-server
+    restart: unless-stopped
+    ports:
+      - "7880:7880"  # HTTP / WS for client & admin APIs
+      - "7881:7881"  # RTCPeer traffic (UDP/TCP, cares about ICE)
+    environment:
+      LIVEKIT_PORT: 7880
+      LIVEKIT_API_KEY: devkey
+      LIVEKIT_API_SECRET: devsecret
+      LIVEKIT_LOG_LEVEL: debug
+      LIVEKIT_WEBRTC_UDP_PORT: 7881
+      LIVEKIT_WEBRTC_TCP_PORT: 7881
+      LIVEKIT_REDIS_ADDRESS: ""
+    command:
+      - --dev
+      - --bind
+      - 0.0.0.0
+      - --port
+      - "7880"
+      - --node-ip
+      - 127.0.0.1

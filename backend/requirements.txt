@@ -1,0 +1,7 @@
+jaclang
+byllm
+requests
+fastapi
+uvicorn
+python-dotenv
+google-generativeai
