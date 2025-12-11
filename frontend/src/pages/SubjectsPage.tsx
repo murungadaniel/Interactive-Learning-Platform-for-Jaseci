@@ -41,6 +41,7 @@ import {
 } from "../api";
 import CodeBlockEditor from "../components/CodeBlockEditor";
 import JacCodeRunner from "../components/JacCodeRunner";
+import AIAssistantButton from "../components/AIAssistantButton";
 import type { AuthUser } from "../api";
 
 // =======================================================
@@ -699,10 +700,10 @@ const SubjectsPage: React.FC<SubjectsPageProps> = ({ authUser }) => {
     setQuizFinished(true);
     setQuizTimeLeft(0);
 
-    if (selectedLesson) {
+    if (selectedLesson && authUser) {
       try {
         await saveQuizResult(
-          DEMO_USER_ID,
+          authUser.username,
           selectedLesson.lesson_id,
           newCorrect,
           newWrong
@@ -959,19 +960,19 @@ const SubjectsPage: React.FC<SubjectsPageProps> = ({ authUser }) => {
             <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
               {selectedLesson?.title ?? "Lesson"}
             </Typography>
-            {currentLessonProgress && (
+            {authUser && selectedLesson && (
               <Chip
                 label={
-                  currentLessonProgress.status === "completed"
-                    ? `Passed ${Math.round(currentLessonProgress.score * 100)}%`
-                    : currentLessonProgress.status === "locked"
+                  currentLessonProgress?.status === "completed"
+                    ? `Passed ${Math.round((currentLessonProgress?.score ?? 0) * 100)}%`
+                    : currentLessonProgress?.status === "locked"
                     ? "Locked"
                     : "In progress"
                 }
                 color={
-                  currentLessonProgress.status === "completed"
+                  currentLessonProgress?.status === "completed"
                     ? "success"
-                    : currentLessonProgress.status === "locked"
+                    : currentLessonProgress?.status === "locked"
                     ? "default"
                     : "warning"
                 }
@@ -1222,6 +1223,14 @@ const SubjectsPage: React.FC<SubjectsPageProps> = ({ authUser }) => {
                     )
                   )}
                 </Box>
+              )}
+              
+              {/* AI Assistant Button - shown for all users */}
+              {selectedLesson && (
+                <AIAssistantButton
+                  chapterTitle={selectedLesson.title}
+                  chapterContent={selectedLesson.content}
+                />
               )}
             </>
           )}

@@ -56,15 +56,25 @@ const JAC_BG = "#0B1024";
 const JAC_SIDEBAR = "#0F1831";
 const JAC_ACCENT = "#5BE0B3";
 
-const navItems = [
-  { label: "Jac Book", icon: <SchoolIcon />, path: "/" },
-  { label: "Dashboard", icon: <DashboardIcon />, path: "/dashboard" },
-  { label: "Virtual Classroom", icon: <VideoIcon />, path: "/classroom" },
-  { label: "Schedule", icon: <CalendarIcon />, path: "/schedule" },
-  { label: "AI Assistant", icon: <ChatIcon />, path: "/ai" },
-  { label: "Analytics", icon: <InsightsIcon />, path: "/analytics" },
-  { label: "Profile", icon: <PersonIcon />, path: "/profile" },
-];
+// Navigation items configuration - icons are rendered inside the component
+const getNavItemsConfig = (isAuthenticated: boolean) => {
+  const baseItems = [
+    { label: "Jac Book", iconName: "School", path: "/", requireAuth: false },
+  ];
+  
+  if (isAuthenticated) {
+    return [
+      ...baseItems,
+      { label: "Dashboard", iconName: "Dashboard", path: "/dashboard", requireAuth: true },
+      { label: "Virtual Classroom", iconName: "Video", path: "/classroom", requireAuth: true },
+      { label: "Schedule", iconName: "Calendar", path: "/schedule", requireAuth: true },
+      { label: "Analytics", iconName: "Insights", path: "/analytics", requireAuth: true },
+      { label: "Profile", iconName: "Person", path: "/profile", requireAuth: true },
+    ];
+  }
+  
+  return baseItems;
+};
 
 interface AppShellProps {
   children: React.ReactNode;
@@ -165,8 +175,20 @@ const AppShell: React.FC<AppShellProps> = ({
 
       {/* NAV ITEMS */}
       <List sx={{ flexGrow: 1, py: 1 }}>
-        {navItems.map((item) => {
+        {getNavItemsConfig(!!authUser).map((item) => {
           const selected = location.pathname === item.path;
+          // Render icon based on iconName
+          const getIcon = () => {
+            switch (item.iconName) {
+              case "School": return <SchoolIcon />;
+              case "Dashboard": return <DashboardIcon />;
+              case "Video": return <VideoIcon />;
+              case "Calendar": return <CalendarIcon />;
+              case "Insights": return <InsightsIcon />;
+              case "Person": return <PersonIcon />;
+              default: return <SchoolIcon />;
+            }
+          };
           return (
             <ListItem key={item.label} disablePadding>
               <ListItemButton
@@ -195,7 +217,7 @@ const AppShell: React.FC<AppShellProps> = ({
                     minWidth: 36,
                   }}
                 >
-                  {item.icon}
+                  {getIcon()}
                 </ListItemIcon>
                 <ListItemText
                   primary={item.label}

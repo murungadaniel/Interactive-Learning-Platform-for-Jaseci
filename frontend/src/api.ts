@@ -40,6 +40,27 @@ const API_BASE_URL =
 const USER_AUTH_KEY = "jac_user_auth";
 const GUEST_AUTH_KEY = "jac_guest_auth";
 
+/**
+ * Load saved user authentication from localStorage.
+ * Returns null if no saved auth exists.
+ */
+export function loadSavedAuthUser(): AuthUser | null {
+  const auth = loadAuth(USER_AUTH_KEY);
+  if (!auth) return null;
+  
+  // We need to get the username - it's not stored in the auth object
+  // For now, we'll need to store it separately or retrieve it from backend
+  // For simplicity, we'll store username in a separate key
+  const username = localStorage.getItem(`${USER_AUTH_KEY}_username`);
+  if (!username) return null;
+  
+  return {
+    username,
+    token: auth.token,
+    root_id: auth.root_id,
+  };
+}
+
 function loadAuth(key: string): JacAuth | null {
   const raw = localStorage.getItem(key);
   if (!raw) return null;
@@ -57,6 +78,7 @@ function storeAuth(key: string, auth: JacAuth) {
 
 export function logoutJacUser() {
   localStorage.removeItem(USER_AUTH_KEY);
+  localStorage.removeItem(`${USER_AUTH_KEY}_username`);
 }
 
 export async function signupJacUser(
@@ -79,6 +101,7 @@ export async function signupJacUser(
     root_id: data.root_id,
   };
   storeAuth(USER_AUTH_KEY, { token: auth.token, root_id: auth.root_id });
+  localStorage.setItem(`${USER_AUTH_KEY}_username`, username);
   return auth;
 }
 
