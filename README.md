@@ -1,4 +1,4 @@
-# 🎓 Jac Interactive Tutor
+# Interactive Learning Platform For Jaseci
 
 **A complete AI-powered virtual classroom built using Jaseci (Jac), React, Gemini AI, and LiveKit.**
 
@@ -6,22 +6,22 @@ Jac Interactive Tutor is a next-generation educational platform designed for dem
 
 ---
 
-## 🚀 Key Features
+## Key Features
 
-### 👨‍🏫 Tutor Role
+### Tutor Role
 * **Live Session Management:** Start and control virtual classrooms instantly.
 * **Collaborative Whiteboard:** Draw and type in real-time with keyboard sync.
 * **AI Quiz Generation:** Automatically generate MCQ quizzes based on lesson content.
 * **Automated Evaluation:** AI-powered grading of student answers.
 * **Analytics Dashboard:** Track student progress and engagement metrics.
 
-### 👨‍🎓 Learner Role
+### Learner Role
 * **Easy Access:** Join sessions and view lessons without a mandatory login.
 * **Interactive Tools:** Participate in classroom chat and draw/write on the shared whiteboard.
 * **AI Quizzes:** Attempt 20-question MCQ sets per chapter with adaptive difficulty.
 * **Progress Tracking:** Logged-in users can save scores and track history.
 
-### 🧠 AI Capabilities (Gemini Powered)
+### AI Capabilities (Gemini Powered)
 * **Smart Chat Assistant:** Context-aware Q&A.
 * **Lesson-Aware Quizzes:** Questions generated directly from the current curriculum.
 * **Adaptive Learning:** Difficulty adjusts based on user performance.
@@ -39,7 +39,7 @@ Jac Interactive Tutor is a next-generation educational platform designed for dem
 
 ---
 
-## 📂 Folder Structure
+## Folder Structure
 
 ```text
 project-root/
@@ -85,7 +85,12 @@ Create a `.env` file in the `backend/` directory:
 ```env
 GEMINI_API_KEY=your_actual_gemini_key_here
 GEMINI_MODEL=gemini-2.5-flash
-LIVEKIT_URL=ws://localhost:7880
+
+API_BASE=http://localhost:8000 
+
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+LIVEKIT_URL=wss://your-livekit-server:7880
 ```
 
 **Start the Server:**
@@ -125,7 +130,7 @@ docker compose up
 
 ---
 
-## 📊 Analytics & Quiz Engine
+## Analytics & Quiz Engine
 
 ### Quiz Mechanics
 * **Structure:** 20 MCQs generated per lesson.
@@ -143,7 +148,7 @@ The dashboard auto-updates in real-time to show:
 
 ---
 
-## ❗ Troubleshooting
+## Troubleshooting
 
 If you encounter issues, please check the following common fixes:
 
@@ -159,5 +164,3 @@ If you encounter issues, please check the following common fixes:
 
 ---
 
-### License
-[Insert License Name Here]
