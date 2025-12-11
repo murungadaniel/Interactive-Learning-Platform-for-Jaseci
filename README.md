@@ -1,136 +1,166 @@
+# Interactive Learning Platform For Jaseci
 
- Jac Interactive Tutor
-A complete AI-powered virtual classroom built using Jaseci (Jac), React, Gemini AI, and optional LiveKit/WebRTC.
-This project is ideal for demos, hackathons, workshops, and building educational AI systems.
+**A complete AI-powered virtual classroom built using Jaseci (Jac), React, Gemini AI, and LiveKit.**
 
-Features
- Tutor Role
+Jac Interactive Tutor is a next-generation educational platform designed for demos, hackathons, and workshops. It bridges the gap between live instruction and AI-driven self-paced learning, featuring real-time collaboration, automatic grading, and behavioral analytics.
 
-Start live sessions
-Control virtual classroom
-Write on shared whiteboard (live + keyboard typing sync)
-Generate AI-powered MCQ quizzes
-Evaluate student answers automatically
-Track student progress
-Access analytics dashboard
+---
 
- Learner Role
+## Key Features
 
-Join tutor’s session
-View lessons without login
-Use classroom chat
-Draw/write on whiteboard
-Attempt AI-generated quizzes (20 MCQs per chapter)
-Track progress if logged in
+### Tutor Role
+* **Live Session Management:** Start and control virtual classrooms instantly.
+* **Collaborative Whiteboard:** Draw and type in real-time with keyboard sync.
+* **AI Quiz Generation:** Automatically generate MCQ quizzes based on lesson content.
+* **Automated Evaluation:** AI-powered grading of student answers.
+* **Analytics Dashboard:** Track student progress and engagement metrics.
 
- AI Features
-Smart AI chat assistant
-Lesson-aware quiz generation
-Automatic quiz grading
-Adaptive difficulty
-Analytics based on user behavior
+### Learner Role
+* **Easy Access:** Join sessions and view lessons without a mandatory login.
+* **Interactive Tools:** Participate in classroom chat and draw/write on the shared whiteboard.
+* **AI Quizzes:** Attempt 20-question MCQ sets per chapter with adaptive difficulty.
+* **Progress Tracking:** Logged-in users can save scores and track history.
 
- Folder Structure
+### AI Capabilities (Gemini Powered)
+* **Smart Chat Assistant:** Context-aware Q&A.
+* **Lesson-Aware Quizzes:** Questions generated directly from the current curriculum.
+* **Adaptive Learning:** Difficulty adjusts based on user performance.
+* **Behavioral Analytics:** Insights derived from user interaction patterns.
+
+---
+
+## 🛠 Tech Stack
+
+* **Backend:** [Python 3.10+](https://www.python.org/), [Jaseci (Jac)](https://jaseci.org/)
+* **AI Engine:** Google Gemini (`gemini-2.5-flash`)
+* **Frontend:** [Node.js 18+](https://nodejs.org/), React, TypeScript, Vite, Material UI
+* **Real-time Media:** [LiveKit](https://livekit.io/) (WebRTC)
+* **Containerization:** Docker (for local LiveKit server)
+
+---
+
+## Folder Structure
+
+```text
 project-root/
 │
-├── backend/
-│   ├── app.jac
-│   ├── livekit_token.py
-│   ├── .env
-│   └── requirements.txt
+├── backend/                # Jaseci & Python Backend
+│   ├── app.jac             # Main Jac application logic
+│   ├── livekit_token.py    # Token generation for WebRTC
+│   ├── .env                # Backend environment variables
+│   └── requirements.txt    # Python dependencies
 │
-├── frontend/
+├── frontend/               # React & TypeScript Frontend
 │   ├── src/
-│   │   ├── api.ts
-│   │   ├── theme.ts
-│   │   ├── pages/
-│   │   ├── components/
-│   │   └── constants.ts
-│   ├── vite.config.ts
-│   ├── tsconfig.json
-│   ├── package.json
-│   └── .env
+│   │   ├── api.ts          # API integration
+│   │   ├── theme.ts        # UI Theming (Material UI)
+│   │   ├── pages/          # Application routes
+│   │   ├── components/     # Reusable UI components
+│   │   └── constants.ts    # Global constants
+│   ├── vite.config.ts      # Vite configuration
+│   └── package.json        # Node dependencies
 │
-└── livekit-local/
-    └── docker-compose.yml
+└── livekit-local/          # Local LiveKit Infrastructure
+    └── docker-compose.yml  # LiveKit container config
+```
 
- Requirements
-Backend
-Python 3.10+
-Jaseci
-Gemini API key
-Optional LiveKit server
+---
 
-Frontend
-Node.js 18+
-React + Typescript
-Vite
-Material UI
+## ⚙️ Setup Instructions
 
-Setup Instructions
-1. Backend Setup
+### 1. Backend Setup
+The backend handles the AI logic and session management.
+
+```bash
 cd backend
+
+# Install dependencies
 pip install -r requirements.txt
 pip install jaseci
+```
 
+**Configuration:**
+Create a `.env` file in the `backend/` directory:
 
-Create .env:
-GEMINI_API_KEY=your_key_here
+```env
+GEMINI_API_KEY=your_actual_gemini_key_here
 GEMINI_MODEL=gemini-2.5-flash
-LIVEKIT_URL=ws://localhost:7880
 
+API_BASE=http://localhost:8000 
 
-Start server:
+LIVEKIT_API_KEY=your_key
+LIVEKIT_API_SECRET=your_secret
+LIVEKIT_URL=wss://your-livekit-server:7880
+```
 
+**Start the Server:**
+```bash
 jac serve app.jac
+```
 
-2. Frontend Setup
+### 2. Frontend Setup
+The frontend provides the user interface for Tutors and Learners.
+
+```bash
 cd frontend
+
+# Install dependencies
 npm install
+```
 
+**Configuration:**
+Create a `.env` file in the `frontend/` directory:
 
-Create .env:
+```env
 VITE_API_BASE_URL=http://localhost:8000
+```
 
-Start dev server:
+**Start Development Server:**
+```bash
 npm run dev
+```
 
-ptional: Local LiveKit Server
+### 3. Optional: Local LiveKit Server
+If you want to use the video/audio features locally without a cloud provider.
+
+```bash
 cd livekit-local
 docker compose up
+```
 
-Analytics (Automatic)
-Lessons viewed
-Quiz attempts
-Scores
-Live session participation
-Time spent
-Activity timeline
+---
 
-Dashboard auto-updates based on real user interactions.
-Quiz Engine
-20 MCQs per lesson
-AI generates questions from lesson content
-40s timer per question
-AI evaluates answers
-Score automatically saved
-Retry unlimited times
+## Analytics & Quiz Engine
 
-❗ Troubleshooting
-Blank screen
-Check:
-theme.ts has export const jacTheme
-/frontend/.env has correct API URL
-Your import paths use:
-import { aiChat } from "../api";
-LiveKit not opening camera
-Browser blocked permissions
-Wrong URL in .env
-Docker not running
-SSL mismatch (use http instead of https for dev)
-Backend “No bytecode found”
+### Quiz Mechanics
+* **Structure:** 20 MCQs generated per lesson.
+* **Timing:** 40-second timer per question.
+* **Grading:** AI evaluates answers immediately.
+* **Retry:** Unlimited retries allowed for mastery.
 
-Run:
+### Dashboard Metrics
+The dashboard auto-updates in real-time to show:
+* Lessons viewed
+* Quiz attempts & scores
+* Live session participation rates
+* Time spent on platform
+* Activity timeline
 
-jac build app.jac
-jac serve app.jac
+---
+
+## Troubleshooting
+
+If you encounter issues, please check the following common fixes:
+
+| Issue | Potential Cause | Solution |
+| :--- | :--- | :--- |
+| **Blank Screen** | Theme Configuration | Ensure `theme.ts` has `export const jacTheme`. |
+| | API URL | Check `VITE_API_BASE_URL` in frontend `.env`. |
+| | Import Paths | Verify you are using `import { aiChat } from "../api";`. |
+| **LiveKit Camera Fail** | Browser Permissions | Allow Camera/Mic access in browser settings. |
+| | SSL Mismatch | Use `http` instead of `https` for local development. |
+| | Wrong URL | Check `LIVEKIT_URL` in backend `.env`. |
+| **Backend Error** | "No bytecode found" | Run `jac build app.jac` before serving. |
+
+---
+
