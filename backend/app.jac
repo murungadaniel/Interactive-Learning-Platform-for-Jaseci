@@ -1,24 +1,11 @@
-# ============================================================================
-# Jac Interactive Tutor Backend
-# Reads Jac Book chapters (Markdown .md) from:
-#   https://github.com/jaseci-labs/jaseci/tree/main/docs/docs/jac_book
-# ============================================================================
-
-# ----------------------------------------------------------------------------
-# Inline Python: GitHub helpers
-# ----------------------------------------------------------------------------
-# ----------------------------------------------------------------------------
-# Inline Python: GitHub helpers + Gemini
-# ----------------------------------------------------------------------------
 ::py::
 import os
 import requests
 from datetime import datetime
-from dotenv import load_dotenv  # ⬅ add this
+from dotenv import load_dotenv
 
-# Load environment variables from .env in the backend folder
+# Load environment variables
 load_dotenv()
-# ---------------- GitHub config ----------------
 OWNER = "jaseci-labs"
 REPO = "jaseci"
 BRANCH = "main"
@@ -77,10 +64,6 @@ def fetch_lesson_content(github_path: str) -> str:
 def now_iso() -> str:
     return datetime.utcnow().isoformat() + "Z"
 
-# ---------------- Gemini (byLLM) support ----------------
-# Reads settings from environment variables:
-#   GEMINI_API_KEY   - your Google API key
-#   GEMINI_MODEL     - e.g. "gemini-2.5-flash"
 try:
     import google.generativeai as genai
 
@@ -110,11 +93,6 @@ except ImportError:
         return "google-generativeai is not installed on the server. Ask your tutor to add it to requirements.txt."
 ::py::
 
-
-# ============================================================================
-# DATA MODEL
-# ============================================================================
-
 # A learner; you can expand this later with auth, etc.
 node User {
     has user_id: str;
@@ -141,16 +119,13 @@ node LessonAttempt {
 edge UserAttempt {}    # User --UserAttempt--> LessonAttempt
 edge AttemptLesson {}  # LessonAttempt --AttemptLesson--> Lesson
 
-
-# ============================================================================
 # WALKER: Sync lessons from GitHub Jac Book
-# ============================================================================
 walker sync_lessons_from_github {
     can sync with `root entry {
-        # 1. Fetch list of .md files in docs/docs/jac_book
+        # Fetch list of .md files in docs/docs/jac_book
         lessons_data = fetch_lessons_index();
 
-        # 2. Build map of existing Lesson nodes by lesson_id
+        # Build map of existing Lesson nodes by lesson_id
         existing_lessons = [-->(`?Lesson)];
         existing_by_id = {};
         for l in existing_lessons {
@@ -160,7 +135,7 @@ walker sync_lessons_from_github {
         created = [];
         updated = [];
 
-        # 3. Upsert Lesson nodes
+        # Upsert Lesson nodes
         for raw in lessons_data {
             id = raw["id"];
             title = raw["title"];
@@ -193,10 +168,7 @@ walker sync_lessons_from_github {
     }
 }
 
-
-# ============================================================================
 # WALKER: List lessons (all chapters)
-# ============================================================================
 walker list_lessons {
     can list with `root entry {
         lessons = [-->(`?Lesson)];
@@ -215,10 +187,7 @@ walker list_lessons {
     }
 }
 
-
-# ============================================================================
 # WALKER: Get single lesson + markdown content
-# ============================================================================
 walker get_lesson_detail {
     has lesson_id: str;
 
@@ -256,10 +225,7 @@ walker get_lesson_detail {
     }
 }
 
-
-# ============================================================================
 # WALKER: Record user progress/score on a lesson
-# ============================================================================
 walker record_attempt {
     has user_id: str;
     has lesson_id: str;
@@ -267,7 +233,7 @@ walker record_attempt {
     has score: float = 0.0;   # 0..1
 
     can save with `root entry {
-        # 1. Ensure user exists
+        # Ensure user exists
         users = [-->(`?User)];
         user_node = None;
 
@@ -285,7 +251,7 @@ walker record_attempt {
             );
         }
 
-        # 2. Find lesson
+        # Find lesson
         lessons = [-->(`?Lesson)];
         lesson_node = None;
 
@@ -304,7 +270,7 @@ walker record_attempt {
             return;
         }
 
-        # 3. Create attempt node + edges
+        # Create attempt node + edges
         attempt = here ++> LessonAttempt(
             user_id   = self.user_id,
             lesson_id = self.lesson_id,
@@ -327,10 +293,7 @@ walker record_attempt {
     }
 }
 
-
-# ============================================================================
 # (Optional) WALKER: Get attempts for a user – for a "My Progress" page
-# ============================================================================
 walker get_user_attempts {
     has user_id: str;
 
@@ -511,9 +474,7 @@ walker quiz_record_attempt {
     }
 }
 
-# ============================================================================
 # Entry block for quick sanity check
-# ============================================================================
 with entry {
     print("Jac Interactive Tutor backend loaded.");
     print("Available walkers:");
